@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
 const multer = require('multer');
+const cors = require('cors');
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -23,7 +24,8 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.urlencoded({ extended: true }));;
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 app.use('/uploads', express.static('uploads'));
 
 // Routes
