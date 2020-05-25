@@ -32,6 +32,7 @@ app.use('/uploads', express.static('uploads'));
 const userRoute = require('./routes/userRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const wholesalerRoutes = require('./routes/wholesalerRoutes');
+const consumerRoutes = require('./routes/consumerRoutes')
 
 app.use('/api/v1', userRoute);
 app.use('/api/v1', adminRoutes);
