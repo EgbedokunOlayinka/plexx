@@ -11,25 +11,25 @@ router.post('/signup/wholesaler', authController.wholesalerSignUp);
 router.post('/login', authController.login);
 
 //VIEW ALL PRODUCTS
-router.get('/products', userController.viewAllProducts);
+router.get('/products',authController.protectRoutes, userController.viewAllProducts);
 
 //VIEW SPECIFIC PRODUCT
-router.get('/products/:id', userController.viewProduct);
+router.get('/products/:id',authController.protectRoutes, userController.viewProduct);
 
 //VIEW ALL WHOLESALERS
-router.get('/wholesalers', userController.viewAllWholesalers);
+router.get('/wholesalers',authController.protectRoutes, userController.viewAllWholesalers);
 
 //VIEW SPECIFIC WHOLESALER
-router.get('/wholesalers/:id', userController.viewWholesaler)
+router.get('/wholesalers/:id',authController.protectRoutes, userController.viewWholesaler)
 
 //VIEW ALL CATEGORIES
-router.get('/categories', userController.viewAllCategories);
+router.get('/categories',authController.protectRoutes, userController.viewAllCategories);
 
 //VIEW SPECIFIC CATEGORY
-router.get('/categories/:id', userController.viewCategory);
+router.get('/categories/:id',authController.protectRoutes, userController.viewCategory);
 
 //VIEW PRODUCT REVIEWS
-router.get('/products/:id/reviews', userController.viewProductReviews);
+router.get('/products/:id/reviews',authController.protectRoutes, userController.viewProductReviews);
 
 //DELETE ACCOUNT
 router.put('/users', authController.protectRoutes, userController.deactivateAccount);

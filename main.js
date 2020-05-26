@@ -37,6 +37,7 @@ const consumerRoutes = require('./routes/consumerRoutes')
 app.use('/api/v1', userRoute);
 app.use('/api/v1', adminRoutes);
 app.use('/api/v1', wholesalerRoutes);
+app.use('/api/v1', consumerRoutes);
 
 app.get('/', (req, res) =>{
     res.send('Everything online e-commerce application')
