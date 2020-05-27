@@ -79,7 +79,7 @@ exports.removeAllProductsFromCart = async (req, res, next) =>{
 exports.viewAllproductsInCart = async (req, res, next) =>{
     try{
         const products = await Product.find({_id: req.user.cart})
-        if(products.length = 0){
+        if(products.length === 0){
             res.status(404).json({
                 Status: 'Fail',
                 Error: 'There are no products in your cart'
