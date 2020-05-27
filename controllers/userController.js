@@ -33,14 +33,14 @@ exports.viewAllProducts = async (req, res, next) => {
     next();
 };
 
-exports.viewProduct = async (req, res, next) => {
-    try {
-        let productId = req.params.id;
-        let findProduct = await Product.findById(productId);
-        if(findProduct) {
+exports.viewProduct = (req,res,next) => {
+    let productId = req.params.id;
+    Product.findById(productId).populate('userReviews').exec((err,result)=>{
+        if(err) console.log(err);
+        if(result) {
             res.status(200).json({
                 status: 'success',
-                data: findProduct
+                data: result
             })
         } else {
             res.status(404).json({
@@ -48,26 +48,7 @@ exports.viewProduct = async (req, res, next) => {
                 error: 'Product not found'
             })
         }
-    }
-    catch(err) {
-        console.error(err);
-        if (err.name === 'ValidationError'){
-        const errors = Object.values(err.errors).map(el => el.message);
-        const error = errors[0];
-        res.status(500).json({
-            status: 'fail',
-            error: error
-            });
-        }
-        else{
-        console.log(err);
-        res.status(400).json({
-        status: 'fail',
-        error: err
-            })
-        }
-    }
-    next();
+    })
 };
 
 exports.viewAllWholesalers = async (req, res, next) => {

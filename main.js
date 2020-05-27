@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use('/uploads', express.static('uploads'));
+app.use('/api/v1/uploads', express.static('uploads'));
 
 // Routes
 const userRoute = require('./routes/userRoutes');
