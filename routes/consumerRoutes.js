@@ -41,4 +41,10 @@ router.put('/product/:reviewId/review', authController.protectRoutes, reviewCont
 //DELETE MY REVIEW
 router.delete('/product/:reviewId/review', authController.protectRoutes, reviewController.deleteMyProductreview);
 
+// MAKE A PURCHASE
+router.post('/purchases', authController.protectRoutes, cartController.checkout);
+
+//VIEW PURCHASES
+router.get('/purchases', authController.protectRoutes, cartController.viewPurchases);
+
 module.exports = router

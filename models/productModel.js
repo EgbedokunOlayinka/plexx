@@ -13,23 +13,29 @@ const productSchema = new Schema({
         uppercase: true
     },
 
+    categoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    },
+
     category: {
         type: String,
         required: true
     },
 
-    categoryId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Category',
-    },
-
-    wholesaler: {
+    productDescription: {
         type: String
     },
 
     wholesalerId: {
         type: Schema.Types.ObjectId,
-        ref: 'Wholesaler',
+        ref: 'User',
+        required: true
+    },
+
+    wholesaler: {
+        type: String,
         required: true
     },
 
@@ -39,8 +45,7 @@ const productSchema = new Schema({
     },
 
     image: {
-        type: String
-        //required: true   
+        type: String    //in form of image url
     },
 
     numberAvailable: {

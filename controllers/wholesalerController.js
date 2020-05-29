@@ -8,13 +8,15 @@ const upload = require('../upload');
 
 exports.postProducts = async (req, res, next) => {
     try {
-        let { name, category, price, numberAvailable } = req.body;
+        let { name, category, price, numberAvailable, productDescription } = req.body;
         if ( !name || !category || !price || !numberAvailable ) {
             res.status(403).json({
                 status: 'fail',
                 error: 'Incomplete details provided'
             })
         }
+        // console.log(name,category,price,numberAvailable);
+        // res.send(name,category,price,numberAvailable);
 
         let wholesaler = `${req.user.firstName} ${req.user.lastName}`;
         let wholesalerId = req.user._id;
@@ -27,16 +29,23 @@ exports.postProducts = async (req, res, next) => {
             image = req.file.path;
         }
 
-        let newProduct = new Product({ name, category, categoryId, wholesaler, wholesalerId, price, numberAvailable, image });
+        let newProduct = new Product({ name, category, categoryId, wholesaler, wholesalerId, price, numberAvailable, image, productDescription });
         let savedProduct = await newProduct.save();
 
         
 
-        categoryName.products.push(savedProduct);
-        let saveCategory = await categoryName.save();
+        // categoryName.products.push(savedProduct);
+        // let saveCategory = await categoryName.save();
 
-        req.user.products.push(savedProduct);
-        let saveWholesaler = await req.user.save();
+        // req.user.products.push(savedProduct);
+        // let saveWholesaler = await req.user.save();
+
+
+        const updateCategory = await Category.findByIdAndUpdate({_id: categoryId}, {$push: {products: savedProduct._id}}, {new: true, useFindAndModify: false});
+
+        const updateUser = await User.findByIdAndUpdate({_id: wholesalerId}, {$push: {products: savedProduct._id}}, {new: true, useFindAndModify: false});
+
+
 
         res.status(201).json({
             status: 'success',
@@ -192,27 +201,3 @@ exports.deleteProducts = async(req, res, next) => {
     next();
 };
 
-// exports.postProducts = async(req, res, next) => {
-//     try {
-
-//     }
-//     catch(err) {
-//         console.error(err);
-//         if (err.name === 'ValidationError'){
-//         const errors = Object.values(err.errors).map(el => el.message);
-//         const error = errors[0];
-//         res.status(500).json({
-//             status: 'fail',
-//             error: error
-//             });
-//         }
-//         else{
-//         console.log(err);
-//         res.status(400).json({
-//         status: 'fail',
-//         error: err
-//             })
-//         }
-//     }
-//     next();
-// };

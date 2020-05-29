@@ -105,7 +105,6 @@ exports.deleteCategory = async(req, res, next) => {
         let categoryId = req.params.id;
         const deleteCategory = await Category.findByIdAndDelete(categoryId);
         if(deleteCategory) {
-            const deleteProducts = await Product.deleteMany({ categoryId: categoryId});
             res.status(204).json({
                 status: 'success',
                 data: null
@@ -117,7 +116,7 @@ exports.deleteCategory = async(req, res, next) => {
             })
         }
 
-        
+        const deleteProducts = await Product.deleteMany({ category: categoryId});
         
     }
     catch(err) {
@@ -245,3 +244,36 @@ exports.viewConsumer = async (req, res, next) => {
     }
     next();
 };
+exports.updateUserAccount = async (req, res, next) =>{
+    try{
+        const user = await User.findByIdAndUpdate({_id: req.params.userId}, req.body, {new: true, runValidators: true});
+        if(!user){
+            res.status(400).json({
+                Status: 'Fail',
+                Error: 'Could not find requested user'
+            })
+        }
+        res.status(200).json({
+            Status: 'Success',
+            Message: 'User Updated Successfully',
+            data: user
+        })
+    }catch(err){
+        console.error(err);
+        if (err.name === 'ValidationError'){
+        const errors = Object.values(err.errors).map(el => el.message);
+        const error = errors[0];
+        res.status(500).json({
+            status: 'fail',
+            error: error
+            });
+        }
+        else{
+        console.log(err);
+        res.status(400).json({
+        status: 'fail',
+        error: err
+            })
+        }
+    }
+}

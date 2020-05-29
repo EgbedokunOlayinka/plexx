@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const Schema = mongoose.Schema;
+const Product = require('./productModel');
+const Purchase = require('./purchaseModel');
 
 const userSchema = new Schema({
     firstName: {
@@ -75,7 +77,7 @@ const userSchema = new Schema({
 
     purchaseHistory: [
         { type: Schema.Types.ObjectId, 
-            ref: 'Product' }
+            ref: 'Purchase' }
         ],
 }, 
 {timestamps: true}

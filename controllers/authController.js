@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const {promisify} = require('util');
 const User = require('../models/userModel');
+const Category = require('../models/categoryModel');
 
 
 const signToken = (id, role) => {
@@ -161,6 +162,7 @@ exports.protectRoutes = async (req, res, next) =>{
             )
         }
         req.user = currentUser;
+        console.log(req.user);
     }catch(err){
         res.status(401).json({
             status: 'Fail',
@@ -194,3 +196,64 @@ exports.restrictToAdmin = (req, res, next) =>{
     }
     next();
 };
+
+// exports.testSend = async (req, res, next) => {
+//     try {
+//         let { name, category, price, numberAvailable } = req.body;
+//         if ( !name || !category || !price || !numberAvailable ) {
+//             res.status(403).json({
+//                 status: 'fail',
+//                 error: 'Incomplete details provided'
+//             })
+//         }
+
+//         let wholesaler = `${req.user.firstName} ${req.user.lastName}`;
+//         let wholesalerId = req.user._id;
+        
+//         let categoryName = await Category.findOne({ name: category });
+//         let categoryId = categoryName._id;
+//         let image;
+
+//         if(req.file) {
+//             image = req.file.path;
+//         }
+
+//         let newProduct = new Product({ name, category, categoryId, wholesaler, wholesalerId, price, numberAvailable, image });
+//         let savedProduct = await newProduct.save();
+
+        
+
+//         categoryName.products.push(savedProduct);
+//         let saveCategory = await categoryName.save();
+
+//         req.user.products.push(savedProduct);
+//         let saveWholesaler = await req.user.save();
+
+//         res.status(201).json({
+//             status: 'success',
+//             message: 'Product posted successfully',
+//             data: savedProduct
+//         })
+        
+        
+//     }
+//     catch(err) {
+//         console.error(err);
+//         if (err.name === 'ValidationError'){
+//         const errors = Object.values(err.errors).map(el => el.message);
+//         const error = errors[0];
+//         res.status(500).json({
+//             status: 'fail',
+//             error: error
+//             });
+//         }
+//         else{
+//         console.log(err);
+//         res.status(400).json({
+//         status: 'fail',
+//         error: err
+//             })
+//         }
+//     }
+//     next();
+//  };

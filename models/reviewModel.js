@@ -6,21 +6,26 @@ const User = require('./userModel');
 
 
 const reviewSchema = new Schema({
+    productName: {
+        type: String
+    },
     product: {
         type: Schema.Types.ObjectId,
         ref: 'Product',
         required: true
     },
-
+    consumerName: {
+        type: String
+    },
     consumer: {
         type: Schema.Types.ObjectId,
-        ref: 'Consumer',
+        ref: 'User',
         required: true
     },
 
     reviewBody: {
         type: String,
-        required: true
+        required: [true, 'Review body cannot be empty']
     }
 }, 
 

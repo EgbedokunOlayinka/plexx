@@ -3,6 +3,15 @@ const Product = require('../models/productModel');
 const Category = require('../models/categoryModel');
 const Review = require('../models/reviewModel');
 
+const filteredObj = (obj, ...allowedFields) =>{
+    const newFields = {};
+    Object.keys(obj).forEach(el =>{
+        if(allowedFields.includes(el)){
+            newFields[el] = obj[el]
+        }
+    });
+    return newFields;
+};
 
 exports.viewAllProducts = async (req, res, next) => {
     try {
@@ -33,6 +42,52 @@ exports.viewAllProducts = async (req, res, next) => {
     next();
 };
 
+// exports.viewProduct = async (req, res, next) => {
+//     try {
+//         let productId = req.params.id;
+//         // let findProduct = await Product.findById(productId);
+//         // let populate = findProduct.populate('reviews').exec((err,result)=>{
+//         //     if(err) console.log(err);
+//         // })
+
+//         Product.findById(productId).populate('reviews').exec((err,result)=>{
+//             if(err) console.log(err);
+//             res.send(result);
+//         })
+
+//         // if(findProduct) {
+//         //     res.status(200).json({
+//         //         status: 'success',
+//         //         data: findProduct
+//         //     })
+//         // } else {
+//         //     res.status(404).json({
+//         //         status: 'fail',
+//         //         error: 'Product not found'
+//         //     })
+//         // }
+//     }
+//     catch(err) {
+//         console.error(err);
+//         if (err.name === 'ValidationError'){
+//         const errors = Object.values(err.errors).map(el => el.message);
+//         const error = errors[0];
+//         res.status(500).json({
+//             status: 'fail',
+//             error: error
+//             });
+//         }
+//         else{
+//         console.log(err);
+//         res.status(400).json({
+//         status: 'fail',
+//         error: err
+//             })
+//         }
+//     }
+//     next();
+// };
+
 exports.viewProduct = (req,res,next) => {
     let productId = req.params.id;
     Product.findById(productId).populate('userReviews').exec((err,result)=>{
@@ -49,7 +104,7 @@ exports.viewProduct = (req,res,next) => {
             })
         }
     })
-};
+}
 
 exports.viewAllWholesalers = async (req, res, next) => {
     try {
@@ -146,101 +201,78 @@ exports.viewAllCategories = async (req, res, next) => {
     next();
 };
 
-exports.viewCategory = async (req, res, next) => {
-    try {
-        let categoryId = req.params.id;
-        let findCategory = await Category.findById(categoryId);
-        if(findCategory) {
+// exports.viewCategory = async (req, res, next) => {
+//     try {
+//         let categoryId = req.params.id;
+//         let findCategory = await Category.findById(categoryId);
+//         if(findCategory) {
+//             res.status(200).json({
+//                 status: 'success',
+//                 data: findCategory
+//             })
+//         } else {
+//             res.status(404).json({
+//                 status: 'fail',
+//                 error: 'Category not found'
+//             })
+//         }
+//     }
+//     catch(err) {
+//         console.error(err);
+//         if (err.name === 'ValidationError'){
+//         const errors = Object.values(err.errors).map(el => el.message);
+//         const error = errors[0];
+//         res.status(500).json({
+//             status: 'fail',
+//             error: error
+//             });
+//         }
+//         else{
+//         console.log(err);
+//         res.status(400).json({
+//         status: 'fail',
+//         error: err
+//             })
+//         }
+//     }
+//     next();
+// };
+
+exports.viewCategory = (req,res,next) => {
+    let categoryId = req.params.id;
+    Category.findById(categoryId).populate('products').exec((err,result)=>{
+        // console.log(result);
+        if(err) console.log(err);
+        if(result) {
             res.status(200).json({
                 status: 'success',
-                data: findCategory
-            })
-        } else {
-            res.status(404).json({
-                status: 'fail',
-                error: 'Category not found'
-            })
-        }
-    }
-    catch(err) {
-        console.error(err);
-        if (err.name === 'ValidationError'){
-        const errors = Object.values(err.errors).map(el => el.message);
-        const error = errors[0];
-        res.status(500).json({
-            status: 'fail',
-            error: error
-            });
-        }
-        else{
-        console.log(err);
-        res.status(400).json({
-        status: 'fail',
-        error: err
-            })
-        }
-    }
-    next();
-};
-
-exports.viewProductReviews = async (req, res, next) => {
-    try {
-        let productId = req.params.id;
-        let findProduct = await Product.findById(productId);
-        if(findProduct) {
-            // findProduct
-            // .populate('userReviews')
-            // .exec((err,userReviews) => {
-            //     if(err) console.log(err);
-            //     res.status(200).json({
-            //         status: 'success',
-            //         data: userReviews
-            //     })
-            // })
-            let findReviews = await Review.find({ product: productId });
-            res.status(200).json({
-                status: 'success',
-                data: userReviews
-            })
-
-        } else {
+                data: result
+        })
+         } else {
             res.status(404).json({
                 status: 'fail',
                 error: 'Product not found'
             })
         }
-    }
-    catch(err) {
-        console.error(err);
-        if (err.name === 'ValidationError'){
-        const errors = Object.values(err.errors).map(el => el.message);
-        const error = errors[0];
-        res.status(500).json({
-            status: 'fail',
-            error: error
-            });
-        }
-        else{
-        console.log(err);
-        res.status(400).json({
-        status: 'fail',
-        error: err
-            })
-        }
-    }
-    next();
+    })
+    // next();         
 };
 
-exports.deactivateAccount = async (req, res, next) => {
+exports.deleteAccount = async (req, res, next) => {
     try {
-        let userId = req.user._id;
-        let findUser = await User.findByIdAndUpdate(userId, { active: false });
+        let userId = req.params.id;
+        let findUser = await User.findById(userId);
         if(findUser) {
+            let deleteUser = await User.findByIdAndDelete(userId);
             res.clearCookie('jwt');
-            res.status(201).json({
+            res.status(204).json({
                 status: 'success',
-                message: 'User deactivated successfully',
-                data: req.user
+                data: null
+            })
+        } else {
+            res.status(404).json({
+                status: 'fail',
+                error: 'User not found'
             })
         }
     }
@@ -264,6 +296,34 @@ exports.deactivateAccount = async (req, res, next) => {
     }
     next();
 };
-
+exports.updateMyAccount = async (req, res, next) =>{
+    try{
+        const filteredBody = filteredObj(req.body, 'email', 'firstName', 'lastName');
+        const updateMyAccount = await User.findByIdAndUpdate({_id: req.user.id}, filteredBody, {
+            new: true, 
+            runValidators: true});
+        res.status(200).json({
+            Status: 'Success',
+            user: updateMyAccount
+        }); 
+    }catch(err){
+        console.error(err);
+        if (err.name === 'ValidationError'){
+        const errors = Object.values(err.errors).map(el => el.message);
+        const error = errors[0];
+        res.status(500).json({
+            status: 'fail',
+            error: error
+            });
+        }
+        else{
+        console.log(err);
+        res.status(400).json({
+        status: 'fail',
+        error: err
+            })
+        }
+    }
+}
 
 
