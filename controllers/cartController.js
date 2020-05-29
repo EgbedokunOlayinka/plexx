@@ -162,7 +162,7 @@ exports.checkout = async(req,res,next) => {
             } else {
                 let updatePurchaseProduct = await Purchase.findOneAndUpdate({_id: savedPurchase._id}, {$push: {products: products[i]}}, {new: true, useFindAndModify: false});
 
-                let updatePurchaseCount = await Purchase.findOneAndUpdate({_id: savedPurchase._id}, {$push: {productCount: productCount[i]}}, {new: true, useFindAndModify: false});
+                let updatePurchaseCount = await Purchase.findOneAndUpdate({_id: savedPurchase._id}, {$push: {productCount: (+productCount[i])}}, {new: true, useFindAndModify: false});
 
                 let updateProductCount = await Product.findOneAndUpdate(
                     {_id: products[i]},
